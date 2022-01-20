@@ -5,16 +5,16 @@
 using namespace std;
 
 struct node{
-    vector<node> parents;
+    vector<int> parents;
     string colour;
 };
 
 int dfs_visit(vector<node> nodes, node node){
     node.colour = "grey";
     for (auto iter: node.parents)
-        if(iter.colour.compare("white") == 0)
-            dfs_visit(nodes, iter);
-        else if(iter.colour.compare("grey")==0)
+        if(nodes[iter-1].colour.compare("white") == 0)
+            dfs_visit(nodes, nodes[iter-1]);
+        else if(nodes[iter-1].colour.compare("grey")==0)
             return -1;
     node.colour = "black";
     return 0;
@@ -35,7 +35,8 @@ int main()
     int u, v, vertices, edges, parent, child;
     scanf("%d %d", &u, &v);
     scanf("%d %d", &vertices, &edges);
-    vector<node> nodes(vertices, node);
+    node vertex;
+    vector<node> nodes(vertices, vertex);
     int i = 0;
     while(i<edges){
         scanf("%d %d", &parent, &child);
