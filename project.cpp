@@ -6,40 +6,51 @@ using namespace std;
 
 struct node{
     vector<int> parents;
-    string colour;
+    char colour = 'w';
 };
 
-int dfs_visit(vector<node> nodes, node node){
-    node.colour = "grey";
-    for (auto iter: node.parents)
-        if(nodes[iter-1].colour.compare("white") == 0)
-            dfs_visit(nodes, nodes[iter-1]);
-        else if(nodes[iter-1].colour.compare("grey")==0)
+int dfs_visit(vector<node> nodes, int vertex){ 
+    
+    nodes[vertex].colour = 'g';
+    for (auto iter: nodes[vertex].parents){
+        if(nodes[iter-1].colour == 'w'){
+            if(dfs_visit(nodes, iter-1) == -1)
+                return -1;
+            }
+        else if(nodes[iter-1].colour == 'g'){
+            cout << "0" << endl;
             return -1;
-    node.colour = "black";
+        }
+    }
+    nodes[vertex].colour = 'b';
+    
     return 0;
 }
 
-void dfs(vector<node> nodes){
-    for (auto iter: nodes){
-        iter.colour = "white";
-    }
-    for (auto iter: nodes){
-        if(iter.colour.compare("white") == 0)
-            dfs_visit(nodes, iter);
+void dfs(vector<node> nodes, int size){
+    for (int i=0; i < size; i++){
+        if(nodes[i].colour == 'w'){
+            if (dfs_visit(nodes, i) == -1){
+                break;
+            }
+        }
     }
 }
 
 int main()
 {
     int u, v, vertices, edges, parent, child;
-    scanf("%d %d", &u, &v);
-    scanf("%d %d", &vertices, &edges);
+    if(scanf("%d %d", &u, &v)!=2)
+        return -1;
+    if(scanf("%d %d", &vertices, &edges)!=2)
+        return -1;
     node vertex;
-    vector<node> nodes(vertices, vertex);
+    vector<node> nodes(vertices);
     int i = 0;
     while(i<edges){
-        scanf("%d %d", &parent, &child);
+        if(scanf("%d %d", &parent, &child)!=2)
+            return -1;
+        
         if(nodes[child-1].parents.size() == 2){
             cout << "0" << endl;
             return 0;
@@ -47,11 +58,10 @@ int main()
         nodes[child-1].parents.push_back(parent);
         i++;
     }
-    if(nodes[u].parents.empty() && nodes[v].parents.empty()){
+    if(nodes[u-1].parents.empty() && nodes[v-1].parents.empty()){
         cout << "-" << endl;
         return 0;
-    }
-
-
+    }    
+    dfs(nodes, vertices);
     return 0;
 }
