@@ -12,26 +12,19 @@ struct node
 
 vector<node> nodes;
 
-int u_parents(int vertex)
+int color_parents(int vertex)
 {
-    if (nodes[vertex - 1].parents.empty())
-    {
-        return 0;
-    }
     for (auto iter : nodes[vertex - 1].parents)
     {
         nodes[iter - 1].colour = 'r';
-        u_parents(iter);
+        color_parents(iter);
     }
     return 0;
 }
 
 vector<int> LCA(vector<int> vertices, int vertex)
-{   
-    if (nodes[vertex - 1].colour == 'o')  
-        return vertices;
-
-    else if (nodes[vertex - 1].parents.empty())
+{
+    if (nodes[vertex - 1].parents.empty())
     {
         if (nodes[vertex - 1].colour == 'r')
         {
@@ -45,6 +38,9 @@ vector<int> LCA(vector<int> vertices, int vertex)
     {
 
         if (nodes[vertex - 1].colour == 'y')
+            nodes[iter - 1].colour = 'o';
+
+        else if (nodes[vertex - 1].colour == 'o')
             nodes[iter - 1].colour = 'o';
 
         else if (nodes[iter - 1].colour == 'r')
@@ -64,18 +60,20 @@ vector<int> pre_processing(int u, int v)
     vector<int> aux;
     vector<int> result;
     nodes[u - 1].colour = 'r';
-    u_parents(u);
+    color_parents(u);
     if (nodes[v - 1].colour == 'r')
     {
         nodes[v - 1].colour = 'y';
         aux.push_back(v);
     }
     aux = LCA(aux, v);
-    for(auto iter: aux)
-        if(nodes[iter-1].colour == 'y')
+
+    for (auto iter : aux)
+        if (nodes[iter - 1].colour == 'y')
             result.push_back(iter);
 
     sort(result.begin(), result.end());
+
     return result;
 }
 
