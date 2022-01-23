@@ -12,27 +12,23 @@ struct node
 
 vector<node> nodes;
 
-vector<int> u_parents(vector<int> vertices, int vertex)
+int u_parents(int vertex)
 {
-    if (nodes[vertex - 1].parents.empty())
+    /*if (nodes[vertex - 1].parents.empty())
     {
-        return vertices;
-    }
+        return 0;
+    }*/
     for (auto iter : nodes[vertex - 1].parents)
     {
         nodes[iter - 1].colour = 'r';
-        vertices.push_back(iter);
-        vertices = u_parents(vertices, iter);
+        u_parents(iter);
     }
-    return vertices;
+    return 0;
 }
 
 vector<int> LCA(vector<int> vertices, int vertex)
-{   
-    if (nodes[vertex - 1].colour == 'o'){
-        
-        return vertices;}
-    else if (nodes[vertex - 1].parents.empty())
+{
+    if (nodes[vertex - 1].parents.empty())
     {
         if (nodes[vertex - 1].colour == 'r')
         {
@@ -42,6 +38,9 @@ vector<int> LCA(vector<int> vertices, int vertex)
         return vertices;
     }
 
+    if (nodes[vertex - 1].colour == 'o')
+        return vertices;
+
     for (auto iter : nodes[vertex - 1].parents)
     {
 
@@ -50,9 +49,7 @@ vector<int> LCA(vector<int> vertices, int vertex)
 
         else if (nodes[iter - 1].colour == 'r')
         {
-            cout << vertex << endl;
             nodes[iter - 1].colour = 'y';
-
             vertices.push_back(iter);
         }
         vertices = LCA(vertices, iter);
@@ -66,26 +63,20 @@ vector<int> pre_processing(int u, int v)
     vector<int> aux1;
     vector<int> aux2;
     nodes[u - 1].colour = 'r';
-    aux1 = u_parents(aux1, u);
-    for(auto iter : aux1)
-        cout << iter << ' ';
-    cout << endl;
+    u_parents(u);
     if (nodes[v - 1].colour == 'r')
     {
         nodes[v - 1].colour = 'y';
         aux2.push_back(v);
     }
     aux2 = LCA(aux2, v);
-    for(auto iter : aux2)
-        cout << iter <<  ' ' << nodes[iter-1].colour << ' ';
-    cout << endl;
+
     sort(aux2.begin(), aux2.end());
     return aux2;
 }
 
 int dfs_visit(int vertex)
 {
-
     nodes[vertex].colour = 'g';
     for (auto iter : nodes[vertex].parents)
     {
@@ -143,6 +134,7 @@ int main()
             cout << "0" << endl;
             return 0;
         }
+
         nodes[child - 1].parents.push_back(parent);
         i++;
     }
