@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <chrono>
 
 using namespace std;
 
@@ -112,8 +113,12 @@ int dfs(int size)
     return 0;
 }
 
-int main()
-{
+
+int main(){
+    std::chrono::time_point<std::chrono::system_clock> start, end;
+  
+    start = std::chrono::system_clock::now();
+
     int u, v, vertices, edges, parent, child;
     vector<int> res;
     if (scanf("%d %d", &u, &v) != 2)
@@ -156,5 +161,10 @@ int main()
 
     cout << endl;
 
+    end = std::chrono::system_clock::now();
+  
+    std::chrono::duration<double> elapsed_seconds = end - start;
+  
+    std::cout << "elapsed time: " << elapsed_seconds.count() << "s\n";
     return 0;
 }
